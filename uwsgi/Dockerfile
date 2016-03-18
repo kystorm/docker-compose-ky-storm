@@ -22,9 +22,15 @@ RUN apt-get autoremove
 RUN pip3 install uwsgi
 RUN pip3 install -U pip setuptools
 
+VOLUME /var/app
+
 # install requirements
-COPY ../ky-storm/requirements.txt /var/app/ky-storm/
+COPY app/ky-storm/requirements.txt /var/app/ky-storm/
 RUN pip3 install -r /var/app/ky-storm/requirements.txt
+
+# wait for mysql in docker-compose if necessary
+COPY wait_for_mysql.sh /
+RUN chmod 755 /wait_for_mysql.sh
 
 # expose ports
 EXPOSE 8080
