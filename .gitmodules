@@ -1,0 +1,3 @@
+[submodule "uwsgi/app/ky-storm"]
+	path = uwsgi/app/ky-storm
+	url = https://github.com/kystorm/ky-storm.git
