@@ -17,15 +17,21 @@ services:
     build: mysql
     volumes:
       - ./mysql/data:/var/lib/mysql
-    expose:
-      - 3306
+    ports:
+      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=blog
 
-#  nginx:
-#    image: nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./conf:/etc/nginx/conf.d
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./conf:/etc/nginx/conf.d
+    depends_on:
+      - uwsgi
+    volumes_from:
+      - uwsgi:ro
+    links:
+      - uwsgi
