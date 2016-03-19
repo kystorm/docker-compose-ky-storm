@@ -6,17 +6,20 @@
 FROM ubuntu:14.04.4
 MAINTAINER ky.storm <ky.storm@163.com>
 
-RUN apt-get update
-RUN apt-get upgrade -y
+# 中文源, 测试用
+COPY sources.list /etc/apt/sources.list
+
+RUN apt-get update && \
+    apt-get upgrade -y
 
 # python 3.4 has already installed by os
 RUN apt-get install -y \
             python3-pip
 
 # clean apt-get
-RUN apt-get autoclean
-RUN apt-get clean
-RUN apt-get autoremove
+RUN apt-get autoclean && \
+    apt-get clean && \
+    apt-get autoremove
 
 # install uwsgi
 RUN pip3 install uwsgi
@@ -28,9 +31,6 @@ VOLUME /var/app
 COPY app/ky-storm/requirements.txt /var/app/ky-storm/
 RUN pip3 install -r /var/app/ky-storm/requirements.txt
 
-# wait for mysql in docker-compose if necessary
-COPY wait_for_mysql.sh /
-RUN chmod 755 /wait_for_mysql.sh
 
 # expose ports
 EXPOSE 8080

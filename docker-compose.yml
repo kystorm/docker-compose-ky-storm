@@ -1,20 +1,5 @@
-version: '2.0'
+version: '2'
 services:
-#  nginx:
-#    image: nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./conf:/etc/nginx/conf.d
-#    links:
-#      - uwsgi
-#    depends_on:
-#      - uwsgi
-#      - mysql
-#    volumes_from:
-#      - uwsgi
-
-
   uwsgi:
     build: uwsgi
     ports:
@@ -22,17 +7,25 @@ services:
     volumes:
       - ./uwsgi/app/ky-storm:/var/app/ky-storm
     environment:
-      MYSQL_ROOT_PASSWORD: root
-    links:
+      - MYSQL_ROOT_PASSWORD=root
+    depends_on:
       - mysql
-    command: /wait_for_mysql.sh
+    links:
+      - mysql:db
 
   mysql:
     build: mysql
-    ports:
-      - 3306:3306
     volumes:
       - ./mysql/data:/var/lib/mysql
+    expose:
+      - 3306
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: blog
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=blog
+
+#  nginx:
+#    image: nginx
+#    ports:
+#      - 80:80
+#    volumes:
+#      - ./conf:/etc/nginx/conf.d
